@@ -1,0 +1,9 @@
+{\rtf1\ansi\ansicpg1252\cocoartf2869
+\cocoatextscaling0\cocoaplatform0{\fonttbl\f0\fswiss\fcharset0 Helvetica;}
+{\colortbl;\red255\green255\blue255;\red0\green0\blue0;}
+{\*\expandedcolortbl;;\cssrgb\c0\c0\c0;}
+\paperw11900\paperh16840\margl1440\margr1440\vieww14700\viewh8400\viewkind0
+\deftab720
+\pard\pardeftab720\sl259\slmult1\sa160\partightenfactor0
+
+\f0\fs22 \cf2 name: CI-CD Pipeline\uc0\u8232 \u8232 on:\u8232   push:\u8232     branches: [main]\u8232 \u8232 jobs:\u8232   build-deploy:\u8232     runs-on: ubuntu-latest\u8232 \u8232     steps:\u8232     - name: Checkout Code\u8232       uses: actions/checkout@v4\u8232 \u8232     - name: Login to Docker Hub\u8232       run: echo "$\{\{ secrets.DOCKER_PASSWORD \}\}" | docker login -u "$\{\{ secrets.DOCKER_USERNAME \}\}" --password-stdin\u8232 \u8232     - name: Build Docker Image\u8232       run: docker build -t $\{\{ secrets.DOCKER_USERNAME \}\}/aiops-app:latest .\u8232 \u8232     - name: Push Docker Image\u8232       run: docker push $\{\{ secrets.DOCKER_USERNAME \}\}/aiops-app:latest\u8232 \u8232     - name: Configure AWS\u8232       uses: aws-actions/configure-aws-credentials@v4\u8232       with:\u8232         aws-access-key-id: $\{\{ secrets.AWS_ACCESS_KEY \}\}\u8232         aws-secret-access-key: $\{\{ secrets.AWS_SECRET_KEY \}\}\u8232         aws-region: us-east-1\u8232 \u8232     - name: Update kubeconfig\u8232       run: aws eks update-kubeconfig --name aiops-cluster --region us-east-1\u8232 \u8232     - name: Deploy to Kubernetes\u8232       run: kubectl apply -f k8s/deployment.yaml}
